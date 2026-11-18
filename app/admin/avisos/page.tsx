@@ -65,7 +65,7 @@ export default async function RhNoticesPage({
 
             <div>
               <label htmlFor="targetUserId" className="label">
-Servidor (somente desligamento)
+                Servidor (somente desligamento)
               </label>
               <select id="targetUserId" name="targetUserId" className="input" defaultValue="">
                 <option value="">Todos / não se aplica</option>
