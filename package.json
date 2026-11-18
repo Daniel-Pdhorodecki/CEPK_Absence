@@ -8,6 +8,7 @@
     "start": "next start",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
+    "db:create-admin": "node scripts/create-admin.mjs",
     "db:reset": "prisma db push --force-reset && prisma db seed",
     "postinstall": "prisma generate"
   },

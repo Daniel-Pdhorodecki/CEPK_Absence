@@ -35,7 +35,7 @@ export default async function EmployeeNoticesPage({
             Avisos
           </h1>
           <p className="mt-2 helper">
-            Comunicados do RH e avisos de demissão. {unread > 0 ? `${unread} não lido(s).` : "Tudo em dia."}
+            Comunicados da administração e avisos de demissão. {unread > 0 ? `${unread} não lido(s).` : "Tudo em dia."}
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default async function EmployeeNoticesPage({
         <div className="card text-center">
           <p className="font-medium text-slate-700">Nenhum aviso por enquanto.</p>
           <p className="mt-1 text-sm text-slate-500">
-            Quando o RH enviar um comunicado ou aviso de demissão, ele aparece aqui.
+            Quando a administração enviar um comunicado ou aviso de demissão, ele aparece aqui.
           </p>
         </div>
       ) : (
@@ -75,7 +75,7 @@ export default async function EmployeeNoticesPage({
                     <span className="badge bg-rose-100 text-rose-800">Aviso de demissão</span>
                   ) : (
                     <span className="badge bg-[var(--surface-3)] text-[var(--muted)]">
-                      Comunicado do RH
+                      Comunicado da administração
                     </span>
                   )}
                   {isUnread ? (

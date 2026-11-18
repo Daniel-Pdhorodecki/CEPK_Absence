@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 
 import { ProfileSettings } from "@/components/ProfileSettings";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Meu perfil" };
 
-export default async function RhProfilePage({
+export default async function AdminProfilePage({
   searchParams,
 }: {
   searchParams: Promise<{ ok?: string; erro?: string }>;
 }) {
-  const user = await requireRH();
+  const user = await requireAdmin();
   const { ok, erro } = await searchParams;
 
   return (
     <ProfileSettings
-      backHref="/rh"
+      backHref="/admin"
       ok={ok}
       erro={erro}
       user={{
@@ -23,6 +23,8 @@ export default async function RhProfilePage({
         name: user.name,
         email: user.email,
         role: user.role,
+        staffType: user.staffType,
+        position: user.position,
         companyName: user.company.name,
         hasAvatar: user.hasAvatar,
       }}

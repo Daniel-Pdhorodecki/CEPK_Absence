@@ -53,7 +53,7 @@ export default async function RequestAbsencePage({
         </h1>
         <p className="mt-2 helper">
           Escolha o período, o turno e o motivo. Todo pedido, inclusive falta médica,
-          passa pela análise do RH.
+          passa pela análise da administração.
         </p>
       </div>
 
@@ -88,7 +88,7 @@ export default async function RequestAbsencePage({
             </label>
             <select id="kind" name="kind" className="input" defaultValue="COMMON">
               <option value="COMMON">Comum / folga (30 dias de antecedência)</option>
-              <option value="MEDICAL">Médica (exige comprovante e análise do RH)</option>
+              <option value="MEDICAL">Médica (exige comprovante e análise da administração)</option>
             </select>
           </div>
 
@@ -144,7 +144,7 @@ export default async function RequestAbsencePage({
             <p className="mt-1">
               <strong>Médica:</strong> pode ser registrada para os últimos{" "}
               {MEDICAL_PAST_DAYS} dias ou datas futuras de consulta, com comprovante.
-              O pedido fica pendente até a análise do RH.
+              O pedido fica pendente até a análise da administração.
             </p>
           </div>
 

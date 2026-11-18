@@ -109,7 +109,7 @@ export default async function EmployeeHomePage() {
             </span>
           </div>
           <p className="mt-2 text-3xl font-semibold text-amber-600">{pending}</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Aguardando o RH</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Aguardando a administração</p>
         </Link>
         <Link
           href="/app/faltas?status=APPROVED"
@@ -135,7 +135,7 @@ export default async function EmployeeHomePage() {
             </span>
           </div>
           <p className="mt-2 text-3xl font-semibold text-emerald-600">{approved}</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Histórico na empresa</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Histórico na instituição</p>
         </Link>
         <Link
           href="/app/avisos"
@@ -161,7 +161,7 @@ export default async function EmployeeHomePage() {
             </span>
           </div>
           <p className="mt-2 text-3xl font-semibold text-[var(--text)]">{unread}</p>
-          <p className="mt-1 text-xs text-[var(--muted)]">Comunicados do RH</p>
+          <p className="mt-1 text-xs text-[var(--muted)]">Comunicados da administração</p>
         </Link>
       </section>
 
@@ -269,7 +269,7 @@ export default async function EmployeeHomePage() {
             <p className="text-sm font-semibold">Falta médica?</p>
             <p className="mt-1 text-xs leading-relaxed text-slate-300">
               Consulta, dentista e outros cuidados de saúde exigem comprovante e
-              passam pela análise do RH.
+              passam pela análise da administração.
             </p>
             <Link href="/app/solicitar" className="btn-inverse mt-3">
               Registrar falta médica

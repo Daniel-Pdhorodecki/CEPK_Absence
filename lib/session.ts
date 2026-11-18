@@ -66,12 +66,13 @@ export async function requireUser(): Promise<SessionUser> {
 
 export async function requireEmployee(): Promise<SessionUser> {
   const user = await requireUser();
-  if (user.role !== "EMPLOYEE") redirect("/rh");
+  if (user.role === "ADMIN") redirect("/admin");
+  if (user.status !== "APPROVED") redirect("/login?erro=Seu%20cadastro%20n%C3%A3o%20est%C3%A1%20aprovado.");
   return user;
 }
 
-export async function requireRH(): Promise<SessionUser> {
+export async function requireAdmin(): Promise<SessionUser> {
   const user = await requireUser();
-  if (user.role !== "RH") redirect("/app");
+  if (user.role !== "ADMIN") redirect("/app");
   return user;
 }

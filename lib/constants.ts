@@ -6,6 +6,9 @@ export const MAX_ABSENCE_DAYS = 90;
 export const MEDICAL_PAST_DAYS = 30;
 export const MEDICAL_FUTURE_DAYS = 365;
 
+export const INSTITUTION_NAME = "Colégio Estadual P. Kennedy";
+export const EMAIL_DOMAIN = "escola.pr.gov.br";
+
 export const MAX_PROOF_BYTES = 5 * 1024 * 1024; // 5 MB
 export const ALLOWED_PROOF_TYPES = [
   "image/jpeg",
@@ -42,20 +45,20 @@ export const STATUS_STYLES: Record<string, string> = {
 };
 
 export const ROLE_LABELS: Record<string, string> = {
-  RH: "RH",
+  ADMIN: "Administração",
   EMPLOYEE: "Funcionário",
 };
 
-// Sem caracteres ambíguos (0/O, 1/I).
-const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+export const STAFF_TYPE_LABELS: Record<string, string> = {
+  PROFESSOR: "Professor(a)",
+  FUNCIONARIO: "Funcionário(a)",
+};
 
-export function generateCompanyCode(prefix = ""): string {
-  let code = prefix;
-  while (code.length < 8) {
-    code += CODE_ALPHABET[randomInt(CODE_ALPHABET.length)];
-  }
-  return code;
-}
+export const REGISTRATION_STATUS_LABELS: Record<string, string> = {
+  PENDING: "Aguardando aprovação",
+  APPROVED: "Aprovado",
+  REJECTED: "Reprovado",
+};
 
 export function isShift(value: string): boolean {
   return SHIFTS.some((shift) => shift.value === value);
@@ -64,4 +67,13 @@ export function isShift(value: string): boolean {
 /** Decide o label de um status com fallback. */
 export function statusLabel(status: string): string {
   return STATUS_LABELS[status] ?? status;
+}
+
+/** Cargo exibido no perfil: professor tem cargo fixo, funcionário usa o digitado. */
+export function userPositionLabel(user: {
+  staffType: string;
+  position: string | null;
+}): string {
+  if (user.staffType === "PROFESSOR") return "Professor(a)";
+  return user.position?.trim() || "Funcionário(a)";
 }

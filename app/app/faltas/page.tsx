@@ -25,19 +25,19 @@ const FILTERS = [
 const EMPTY_MESSAGES: Record<string, { title: string; text: string }> = {
   ALL: {
     title: "Nenhuma solicitação ainda.",
-    text: "Quando você pedir uma falta, ela aparece aqui com o status do RH.",
+    text: "Quando você pedir uma falta, ela aparece aqui com o status da administração.",
   },
   PENDING: {
     title: "Nenhum pedido pendente.",
-    text: "Você não tem solicitações aguardando análise do RH.",
+    text: "Você não tem solicitações aguardando análise da administração.",
   },
   APPROVED: {
     title: "Nenhuma falta aprovada ainda.",
-    text: "As faltas aprovadas pelo RH aparecem aqui.",
+    text: "As faltas aprovadas pela administração aparecem aqui.",
   },
   REJECTED: {
     title: "Nenhuma falta reprovada.",
-    text: "Pedidos reprovados pelo RH aparecem aqui com a observação.",
+    text: "Pedidos reprovados pela administração aparecem aqui com a observação.",
   },
 };
 
@@ -169,7 +169,7 @@ export default async function MyAbsencesPage({
 
                 {absence.reviewNote ? (
                   <div className="mt-3 rounded-lg border border-[var(--border)] bg-[var(--surface-2)] px-3 py-2 text-sm text-[var(--muted)]">
-                    <span className="font-semibold">Observação do RH:</span>{" "}
+                    <span className="font-semibold">Observação da administração:</span>{" "}
                     {absence.reviewNote}
                   </div>
                 ) : null}
@@ -177,7 +177,7 @@ export default async function MyAbsencesPage({
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border)] pt-3 text-xs text-[var(--muted)]">
                   <span>
                     {absence.status === "PENDING"
-                      ? "Aguardando análise do RH"
+                      ? "Aguardando análise da administração"
                       : absence.reviewedBy
                         ? `Analisado por ${absence.reviewedBy.name}`
                         : absence.autoApproved

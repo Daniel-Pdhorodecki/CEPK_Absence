@@ -14,7 +14,7 @@ export default async function LoginPage({
   searchParams: Promise<{ erro?: string }>;
 }) {
   const user = await getCurrentUser();
-  if (user) redirect(user.role === "RH" ? "/rh" : "/app");
+  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/app");
 
   const { erro } = await searchParams;
 
@@ -45,7 +45,7 @@ export default async function LoginPage({
             autoComplete="email"
             required
             className="input"
-            placeholder="voce@empresa.com"
+            placeholder="voce@escola.pr.gov.br"
           />
         </div>
         <div>

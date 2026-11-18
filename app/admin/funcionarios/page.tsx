@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
 
 import { Avatar } from "@/components/Avatar";
+import { userPositionLabel } from "@/lib/constants";
 import { dateToISO, formatDateBR } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
-export const metadata: Metadata = { title: "Funcionários" };
+export const metadata: Metadata = { title: "Equipe" };
 
 export default async function EmployeesPage() {
-  const rh = await requireRH();
+  const rh = await requireAdmin();
 
   const [employees, terminationNotices] = await Promise.all([
     prisma.user.findMany({
@@ -44,28 +45,27 @@ export default async function EmployeesPage() {
       <div>
         <p className="eyebrow">Equipe</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-[var(--text)] sm:text-4xl">
-          Funcionários
+          Equipe
         </h1>
         <p className="mt-2 helper">
-          {employees.length} funcionário(s) cadastrado(s) em {rh.company.name}.
+          {employees.length} pessoa(s) aprovada(s) em {rh.company.name}.
         </p>
       </div>
 
       {employees.length === 0 ? (
         <div className="card text-center">
-          <p className="font-medium text-slate-700">Nenhum funcionário cadastrado ainda.</p>
-          <p className="mt-1 text-sm text-slate-500">
-            Compartilhe o código <strong className="font-mono">{rh.company.employeeCode}</strong>{" "}
-            com a equipe para que eles criem a conta.
+          <p className="font-medium text-[var(--text)]">Nenhuma pessoa aprovada ainda.</p>
+          <p className="mt-1 text-sm text-[var(--muted)]">
+            Os novos cadastros precisam ser aprovados na aba Cadastros.
           </p>
-          <a href="/rh/empresa" className="btn-primary mt-4">
-            Ver código da empresa
+          <a href="/admin/cadastros" className="btn-primary mt-4">
+            Analisar cadastros
           </a>
         </div>
       ) : (
         <div className="card overflow-hidden p-0">
           <div className="hidden grid-cols-[1.4fr_1fr_0.7fr_0.9fr] gap-4 border-b border-[var(--border)] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-2)] md:grid">
-            <span>Funcionário</span>
+            <span>Servidor</span>
             <span>Cadastro</span>
             <span>Pedidos</span>
             <span>Pendentes</span>
@@ -94,7 +94,9 @@ export default async function EmployeesPage() {
                           </span>
                         ) : null}
                       </div>
-                      <p className="truncate text-xs text-slate-500">{employee.email}</p>
+                      <p className="truncate text-xs text-[var(--muted)]">
+                        {employee.email} · {userPositionLabel(employee)}
+                      </p>
                     </div>
                   </div>
                   <p className="text-sm text-slate-600">
@@ -135,7 +137,7 @@ export default async function EmployeesPage() {
                     </p>
                   </div>
                   <span className="text-xs font-medium text-rose-700">
-                    {notice.target?.name ?? "Funcionário"}
+                    {notice.target?.name ?? "Servidor"}
                   </span>
                 </div>
               ))}

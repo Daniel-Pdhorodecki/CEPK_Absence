@@ -4,16 +4,16 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
-const PATH = "/rh/solicitacoes";
+const PATH = "/admin/solicitacoes";
 
 function fail(message: string): never {
   redirect(`${PATH}?erro=${encodeURIComponent(message)}`);
 }
 
 export async function reviewAbsenceAction(formData: FormData): Promise<void> {
-  const rh = await requireRH();
+  const admin = await requireAdmin();
   const id = String(formData.get("id") ?? "");
   const decision = String(formData.get("decision") ?? "");
   const note = String(formData.get("note") ?? "").trim();
@@ -23,7 +23,7 @@ export async function reviewAbsenceAction(formData: FormData): Promise<void> {
   }
 
   const request = await prisma.absenceRequest.findUnique({ where: { id } });
-  if (!request || request.companyId !== rh.companyId) {
+  if (!request || request.companyId !== admin.companyId) {
     fail("Solicitação não encontrada.");
   }
   if (request.status !== "PENDING") {
@@ -37,15 +37,15 @@ export async function reviewAbsenceAction(formData: FormData): Promise<void> {
     where: { id: request.id },
     data: {
       status: decision === "APPROVE" ? "APPROVED" : "REJECTED",
-      reviewedById: rh.id,
+      reviewedById: admin.id,
       reviewedAt: new Date(),
       reviewNote: note || null,
     },
   });
 
-  revalidatePath("/rh");
-  revalidatePath("/rh/solicitacoes");
-  revalidatePath("/rh/funcionarios");
+  revalidatePath("/admin");
+  revalidatePath("/admin/solicitacoes");
+  revalidatePath("/admin/funcionarios");
   revalidatePath("/app");
   revalidatePath("/app/faltas");
 

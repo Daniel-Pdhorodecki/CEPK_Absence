@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { removeAvatarAction, uploadAvatarAction } from "@/app/actions/profile";
 import { Avatar } from "@/components/Avatar";
+import { ROLE_LABELS, STAFF_TYPE_LABELS } from "@/lib/constants";
 
 export function ProfileSettings({
   user,
@@ -14,6 +15,8 @@ export function ProfileSettings({
     name: string;
     email: string;
     role: string;
+    staffType: string;
+    position: string | null;
     companyName: string;
     hasAvatar: boolean;
   };
@@ -21,6 +24,13 @@ export function ProfileSettings({
   ok?: string;
   erro?: string;
 }) {
+  const roleLabel =
+    user.role === "ADMIN"
+      ? ROLE_LABELS.ADMIN
+      : user.staffType === "PROFESSOR"
+        ? STAFF_TYPE_LABELS.PROFESSOR
+        : user.position?.trim() || STAFF_TYPE_LABELS.FUNCIONARIO;
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -30,7 +40,7 @@ export function ProfileSettings({
             Meu perfil
           </h1>
           <p className="mt-2 helper">
-            Sua foto aparece na sidebar e nos painéis da empresa.
+            Sua foto aparece na sidebar e nos painéis da instituição.
           </p>
         </div>
         <Link href={backHref} className="btn-secondary btn-sm">
@@ -55,7 +65,7 @@ export function ProfileSettings({
             <p className="mt-0.5 truncate text-sm text-[var(--muted)]">{user.email}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <span className="badge bg-[var(--surface-3)] text-[var(--muted)]">
-                {user.role === "RH" ? "RH" : "Funcionário"}
+                {roleLabel}
               </span>
               <span className="badge border border-[var(--border-strong)] text-[var(--muted)]">
                 {user.companyName}

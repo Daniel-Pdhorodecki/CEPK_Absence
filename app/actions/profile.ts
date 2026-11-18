@@ -8,7 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 
 function profilePath(role: string): string {
-  return role === "RH" ? "/rh/perfil" : "/app/perfil";
+  return role === "ADMIN" ? "/admin/perfil" : "/app/perfil";
 }
 
 function fail(role: string, message: string): never {
@@ -17,9 +17,9 @@ function fail(role: string, message: string): never {
 
 function revalidateProfile(): void {
   revalidatePath("/app", "layout");
-  revalidatePath("/rh", "layout");
+  revalidatePath("/admin", "layout");
   revalidatePath("/app/perfil");
-  revalidatePath("/rh/perfil");
+  revalidatePath("/admin/perfil");
 }
 
 export async function uploadAvatarAction(formData: FormData): Promise<void> {

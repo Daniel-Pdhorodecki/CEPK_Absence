@@ -18,13 +18,13 @@ const features = [
   {
     title: "Falta médica com comprovante",
     description:
-      "Consulta, dentista ou qualquer cuidado com a saúde: anexe o comprovante e acompanhe a análise do RH.",
+      "Consulta, dentista ou qualquer cuidado com a saúde: anexe o comprovante e acompanhe a análise da administração.",
     icon: "M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10Z",
   },
   {
-    title: "RH no controle",
+    title: "Administração no controle",
     description:
-      "O RH cria a empresa, compartilha o código, aprova ou reprova pedidos e envia avisos e demissões.",
+      "A administração escolar aprova cadastros, analisa pedidos e publica avisos para toda a equipe.",
     icon: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM22 21v-2a4 4 0 0 0-3-3.87",
   },
 ];
@@ -32,25 +32,25 @@ const features = [
 const steps = [
   {
     number: "01",
-    title: "O funcionário pede",
+    title: "O servidor pede",
     description: "Escolhe o período no calendário, informa o turno e o motivo.",
   },
   {
     number: "02",
-    title: "O RH analisa",
+    title: "A administração analisa",
     description:
-      "Todo pedido entra como pendente. O RH confere, inclusive os comprovantes médicos.",
+      "Todo pedido entra como pendente. A administração confere, inclusive os comprovantes médicos.",
   },
   {
     number: "03",
     title: "Todos acompanham",
-    description: "A decisão aparece na hora no painel do funcionário, com histórico.",
+    description: "A decisão aparece na hora no painel do servidor, com histórico.",
   },
 ];
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  if (user) redirect(user.role === "RH" ? "/rh" : "/app");
+  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/app");
 
   return (
     <div className="page-bg min-h-screen">
@@ -111,9 +111,9 @@ export default async function HomePage() {
               </h1>
 
               <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
-                O funcionário solicita pelo calendário, o RH analisa cada pedido e
-                todos acompanham a decisão. Faltas médicas também passam pela
-                aprovação do RH.
+                O servidor solicita pelo calendário, a administração analisa cada
+                pedido e todos acompanham a decisão. Faltas médicas também passam
+                pela aprovação da administração.
               </p>
 
               <div className="mt-9 flex flex-wrap items-center gap-3">
@@ -126,7 +126,7 @@ export default async function HomePage() {
               </div>
 
               <p className="mt-5 text-sm text-[var(--muted-2)]">
-                Funcionário: use o código da empresa. RH: crie a empresa e gere o código.
+                Use seu e-mail institucional @escola.pr.gov.br. Todo cadastro passa pela aprovação da administração.
               </p>
             </div>
 
@@ -139,7 +139,7 @@ export default async function HomePage() {
                 <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#a3e635]/80">
-                      Painel do RH
+                      Painel da administração
                     </p>
                     <p className="mt-1 text-base font-semibold">Solicitações</p>
                   </div>
@@ -190,7 +190,7 @@ export default async function HomePage() {
                       </span>
                     </div>
                     <p className="mt-3 text-[11px] leading-relaxed text-white/50">
-                      Falta médica · comprovante anexado · aguardando análise do RH
+                      Falta médica · comprovante anexado · aguardando análise da administração
                     </p>
                   </div>
 
@@ -210,7 +210,7 @@ export default async function HomePage() {
                       </span>
                     </div>
                     <p className="mt-3 text-[11px] leading-relaxed text-white/50">
-                      Folga comum · aprovada pelo RH
+                      Folga comum · aprovada pela administração
                     </p>
                   </div>
                 </div>
@@ -274,8 +274,8 @@ export default async function HomePage() {
                 Do pedido à decisão, sem atrito.
               </h2>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--muted)]">
-                Um fluxo simples para o funcionário e transparente para o RH. Todo
-                pedido entra como pendente e só muda de status após a análise.
+                Um fluxo simples para o servidor e transparente para a administração.
+                Todo pedido entra como pendente e só muda de status após a análise.
               </p>
             </div>
 
@@ -310,9 +310,9 @@ export default async function HomePage() {
                 Nenhuma falta é aprovada sozinha.
               </h2>
               <p className="mt-4 max-w-lg text-sm leading-relaxed text-[var(--muted)]">
-                Faltas médicas exigem comprovante e passam pela conferência do RH,
-                como qualquer outro pedido. O histórico registra quem analisou e
-                quando, e o funcionário acompanha cada mudança de status.
+                Faltas médicas exigem comprovante e passam pela conferência da
+                administração, como qualquer outro pedido. O histórico registra quem
+                analisou e quando, e o servidor acompanha cada mudança de status.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link href="/registro" className="btn-primary">
@@ -332,15 +332,15 @@ export default async function HomePage() {
                 },
                 {
                   title: "Revisão humana",
-                  text: "O RH aprova ou reprova com observação registrada.",
+                  text: "A administração aprova ou reprova com observação registrada.",
                 },
                 {
                   title: "Janela de datas",
                   text: "Até 30 dias retroativos e 365 dias futuros para consultas.",
                 },
                 {
-                  title: "Códigos separados",
-                  text: "Código de funcionário e código de RH com acessos distintos.",
+                  title: "Cadastro aprovado",
+                  text: "Novos professores e funcionários entram pendentes até a aprovação da administração.",
                 },
               ].map((item) => (
                 <div key={item.title} className="card-tight">

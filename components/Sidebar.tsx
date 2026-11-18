@@ -4,10 +4,11 @@ import { Avatar } from "@/components/Avatar";
 import type { ShellUser } from "@/components/Shell";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { STAFF_TYPE_LABELS } from "@/lib/constants";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
-type NavItem = { href: string; label: string; icon: string };
+type NavItem = { href: string; label: string; icon: string; badge?: number };
 
 function Icon({ name }: { name: string }) {
   const paths: Record<string, React.ReactNode> = {
@@ -18,6 +19,12 @@ function Icon({ name }: { name: string }) {
         <path d="M8 2v4M16 2v4M3 9h18" />
       </>
     ),
+    clipboard: (
+      <>
+        <rect x="6" y="4" width="12" height="18" rx="2" />
+        <path d="M9 2h6v4H9zM9 12h6M9 16h6" />
+      </>
+    ),
     list: <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />,
     check: <path d="m5 12.5 4.5 4.5L19 6.5" />,
     x: <path d="M6 6l12 12M18 6 6 18" />,
@@ -25,12 +32,6 @@ function Icon({ name }: { name: string }) {
       <>
         <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
         <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-      </>
-    ),
-    building: (
-      <>
-        <rect x="4" y="2" width="16" height="20" rx="2" />
-        <path d="M9 22v-4h6v4M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
       </>
     ),
     users: (
@@ -58,6 +59,12 @@ function Icon({ name }: { name: string }) {
   );
 }
 
+function roleLabel(user: ShellUser): string {
+  if (user.role === "ADMIN") return "Administração";
+  if (user.staffType === "PROFESSOR") return STAFF_TYPE_LABELS.PROFESSOR;
+  return user.position?.trim() || STAFF_TYPE_LABELS.FUNCIONARIO;
+}
+
 export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,7 +77,7 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
       : null;
 
     const pathMatches =
-      targetPath === "/app" || targetPath === "/rh"
+      targetPath === "/app" || targetPath === "/admin"
         ? pathname === targetPath
         : pathname === targetPath || pathname.startsWith(`${targetPath}/`);
 
@@ -93,21 +100,12 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
         </div>
 
         <div className="sidebar-company mt-6 flex items-center gap-3">
-          {user.hasLogo ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/api/empresa/logo"
-              alt={`Logo de ${user.companyName}`}
-              className="size-9 shrink-0 rounded-xl bg-white/10 object-contain p-0.5"
-            />
-          ) : (
-            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white/10 text-sm font-semibold text-white">
-              {user.companyInitial}
-            </span>
-          )}
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-white/10 text-sm font-semibold text-white">
+            {user.companyName.trim().charAt(0).toUpperCase() || "?"}
+          </span>
           <div className="min-w-0">
             <p className="sidebar-muted text-[10px] font-semibold uppercase tracking-[0.16em]">
-              Empresa
+              Instituição
             </p>
             <p className="mt-0.5 truncate text-sm font-medium text-white">
               {user.companyName}
@@ -123,7 +121,12 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
               className={`sidebar-link ${isActive(item.href) ? "sidebar-link-active" : ""}`}
             >
               <Icon name={item.icon} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {item.badge ? (
+                <span className="rounded-full bg-[var(--accent-lime)] px-2 py-0.5 text-[10px] font-bold text-black">
+                  {item.badge}
+                </span>
+              ) : null}
             </Link>
           ))}
         </nav>
@@ -143,8 +146,8 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
             />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">{user.name}</p>
-              <p className="sidebar-muted text-xs">
-                {user.role === "RH" ? "RH" : "Funcionário"} · ver perfil
+              <p className="sidebar-muted truncate text-xs">
+                {roleLabel(user)} · ver perfil
               </p>
             </div>
           </Link>
@@ -185,13 +188,18 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
             <Link
               key={item.href}
               href={item.href}
-              className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition ${
+              className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition ${
                 isActive(item.href)
                   ? "bg-[var(--btn-bg)] text-[var(--btn-fg)]"
                   : "text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
               }`}
             >
               {item.label}
+              {item.badge ? (
+                <span className="rounded-full bg-[var(--accent-lime)] px-1.5 text-[10px] font-bold text-black">
+                  {item.badge}
+                </span>
+              ) : null}
             </Link>
           ))}
         </nav>

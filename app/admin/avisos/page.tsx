@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 
-import { createNoticeAction } from "@/app/rh/avisos/actions";
+import { createNoticeAction } from "@/app/admin/avisos/actions";
 import { formatDateBR, formatDateTimeBR, todayISO } from "@/lib/dates";
 import { MIN_TERMINATION_DAYS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Avisos" };
 
@@ -13,7 +13,7 @@ export default async function RhNoticesPage({
 }: {
   searchParams: Promise<{ ok?: string; erro?: string }>;
 }) {
-  const rh = await requireRH();
+  const rh = await requireAdmin();
   const { ok, erro } = await searchParams;
 
   const [notices, employees] = await Promise.all([
@@ -41,7 +41,7 @@ export default async function RhNoticesPage({
           Avisos
         </h1>
         <p className="mt-2 helper">
-          Publique comunicados para toda a equipe ou envie avisos de demissão individuais.
+          Publique comunicados para toda a equipe ou envie avisos de desligamento individuais.
         </p>
       </div>
 
@@ -59,13 +59,13 @@ export default async function RhNoticesPage({
               </label>
               <select id="type" name="type" className="input" defaultValue="GENERAL">
                 <option value="GENERAL">Comunicado para todos</option>
-                <option value="TERMINATION">Aviso de demissão (individual)</option>
+                <option value="TERMINATION">Aviso de desligamento (individual)</option>
               </select>
             </div>
 
             <div>
               <label htmlFor="targetUserId" className="label">
-                Funcionário (somente demissão)
+Servidor (somente desligamento)
               </label>
               <select id="targetUserId" name="targetUserId" className="input" defaultValue="">
                 <option value="">Todos / não se aplica</option>
@@ -89,7 +89,7 @@ export default async function RhNoticesPage({
                 className="input"
               />
               <p className="mt-1.5 text-xs text-slate-500">
-                Obrigatório para demissão, com no mínimo {MIN_TERMINATION_DAYS} dias de
+                Obrigatório para desligamento, com no mínimo {MIN_TERMINATION_DAYS} dias de
                 antecedência.
               </p>
             </div>
@@ -119,7 +119,7 @@ export default async function RhNoticesPage({
                 required
                 minLength={5}
                 className="input resize-none"
-                placeholder="Escreva o comunicado para os funcionários"
+                placeholder="Escreva o comunicado para os servidores"
               />
             </div>
 
@@ -132,9 +132,9 @@ export default async function RhNoticesPage({
 
           {notices.length === 0 ? (
             <div className="card text-center">
-              <p className="text-sm font-medium text-slate-700">Nenhum aviso publicado.</p>
-              <p className="mt-1 text-xs text-slate-500">
-                Os avisos aparecem no menu do funcionário imediatamente.
+              <p className="text-sm font-medium text-[var(--text)]">Nenhum aviso publicado.</p>
+              <p className="mt-1 text-xs text-[var(--muted)]">
+                Os avisos aparecem no menu do servidor imediatamente.
               </p>
             </div>
           ) : (
@@ -155,7 +155,7 @@ export default async function RhNoticesPage({
                         : "bg-[var(--surface-3)] text-[var(--muted)]"
                     }`}
                   >
-                    {notice.type === "TERMINATION" ? "Demissão" : "Comunicado"}
+                    {notice.type === "TERMINATION" ? "Desligamento" : "Comunicado"}
                   </span>
                   <span className="text-xs text-slate-500">
                     {formatDateTimeBR(notice.createdAt)}
@@ -170,11 +170,11 @@ export default async function RhNoticesPage({
                 </p>
                 {notice.type === "TERMINATION" ? (
                   <p className="mt-2 text-xs font-semibold text-rose-800">
-                    Para {notice.target?.name ?? "funcionário"} · último dia{" "}
+                    Para {notice.target?.name ?? "servidor"} · último dia{" "}
                     {notice.lastWorkingDay ? formatDateBR(notice.lastWorkingDay) : "—"}
                   </p>
                 ) : (
-                  <p className="mt-2 text-xs text-slate-500">Para todos os funcionários</p>
+                  <p className="mt-2 text-xs text-slate-500">Para todos os servidores</p>
                 )}
                 <p className="mt-1 text-xs text-slate-400">Por {notice.author.name}</p>
               </article>

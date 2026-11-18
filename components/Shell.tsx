@@ -4,14 +4,19 @@ export type ShellUser = {
   id: string;
   name: string;
   role: string;
+  staffType: string;
+  position: string | null;
   companyName: string;
-  companyInitial: string;
   hasAvatar: boolean;
-  hasLogo: boolean;
   profileHref: string;
 };
 
-export type ShellNavItem = { href: string; label: string; icon: string };
+export type ShellNavItem = {
+  href: string;
+  label: string;
+  icon: string;
+  badge?: number;
+};
 
 export function Shell({
   user,

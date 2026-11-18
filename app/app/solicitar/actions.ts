@@ -93,10 +93,10 @@ export async function createAbsenceRequest(formData: FormData): Promise<void> {
 
   revalidatePath("/app");
   revalidatePath("/app/faltas");
-  revalidatePath("/rh");
-  revalidatePath("/rh/solicitacoes");
+  revalidatePath("/admin");
+  revalidatePath("/admin/solicitacoes");
 
-  redirect(`/app/faltas?ok=${encodeURIComponent("Solicitação enviada para análise do RH.")}`);
+  redirect(`/app/faltas?ok=${encodeURIComponent("Solicitação enviada para análise da administração.")}`);
 }
 
 export async function cancelAbsenceRequest(formData: FormData): Promise<void> {
@@ -111,7 +111,7 @@ export async function cancelAbsenceRequest(formData: FormData): Promise<void> {
 
   revalidatePath("/app");
   revalidatePath("/app/faltas");
-  revalidatePath("/rh/solicitacoes");
+  revalidatePath("/admin/solicitacoes");
 
   redirect(`/app/faltas?ok=${encodeURIComponent("Solicitação cancelada.")}`);
 }

@@ -9,48 +9,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Instituição única do sistema (Colégio Estadual P. Kennedy).
+// Mantida como registro para agrupar usuários, faltas e avisos.
 model Company {
-  id           String   @id @default(cuid())
-  name         String
-  employeeCode String   @unique
-  rhCode       String   @unique
-  ownerId      String?
-  hasLogo      Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
 
   users    User[]
   absences AbsenceRequest[]
   notices  Notice[]
-  logo     CompanyLogo?
 }
 
 model User {
-  id           String   @id @default(cuid())
+  id           String    @id @default(cuid())
   name         String
-  email        String   @unique
+  email        String    @unique
   passwordHash String
-  role         String // RH | EMPLOYEE
-  isOwner      Boolean  @default(false)
+  role         String    @default("EMPLOYEE") // ADMIN | EMPLOYEE
+  staffType    String    @default("FUNCIONARIO") // PROFESSOR | FUNCIONARIO
+  position     String? // cargo livre para funcionários (ex.: monitor, limpeza)
+  status       String    @default("APPROVED") // PENDING | APPROVED | REJECTED
+  reviewNote   String? // observação da administração na aprovação/reprovação
+  approvedAt   DateTime?
+  approvedById String?
   companyId    String
-  hasAvatar    Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  hasAvatar    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
 
   company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  approvedBy    User?            @relation("Approver", fields: [approvedById], references: [id])
+  approvals     User[]           @relation("Approver")
   absences      AbsenceRequest[] @relation("Requester")
   reviews       AbsenceRequest[] @relation("Reviewer")
   notices       Notice[]         @relation("Author")
   receivedNotices Notice[]       @relation("Target")
   noticeReads   NoticeRead[]
   avatar        UserAvatar?
-}
-
-model CompanyLogo {
-  companyId String   @id
-  data      Bytes
-  type      String
-  updatedAt DateTime @updatedAt
-
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model UserAvatar {
@@ -90,19 +85,19 @@ model AbsenceRequest {
 }
 
 model Notice {
-  id            String    @id @default(cuid())
-  companyId     String
-  authorId      String
-  targetUserId  String? // null = todos os funcionários
-  type          String // GENERAL | TERMINATION
-  title         String
-  message       String
+  id             String    @id @default(cuid())
+  companyId      String
+  authorId       String
+  targetUserId   String? // null = todos os funcionários
+  type           String // GENERAL | TERMINATION
+  title          String
+  message        String
   lastWorkingDay DateTime?
-  createdAt     DateTime  @default(now())
+  createdAt      DateTime  @default(now())
 
-  company Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  author  User        @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
-  target  User?       @relation("Target", fields: [targetUserId], references: [id], onDelete: Cascade)
+  company Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  author  User         @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
+  target  User?        @relation("Target", fields: [targetUserId], references: [id], onDelete: Cascade)
   reads   NoticeRead[]
 
   @@index([companyId, createdAt])

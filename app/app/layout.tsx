@@ -24,10 +24,10 @@ export default async function EmployeeLayout({
         id: user.id,
         name: user.name,
         role: user.role,
+        staffType: user.staffType,
+        position: user.position,
         companyName: user.company.name,
-        companyInitial: user.company.name.trim().charAt(0).toUpperCase() || "?",
         hasAvatar: user.hasAvatar,
-        hasLogo: user.company.hasLogo,
         profileHref: "/app/perfil",
       }}
     >

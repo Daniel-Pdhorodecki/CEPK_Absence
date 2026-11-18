@@ -23,6 +23,8 @@ export default async function EmployeeProfilePage({
         name: user.name,
         email: user.email,
         role: user.role,
+        staffType: user.staffType,
+        position: user.position,
         companyName: user.company.name,
         hasAvatar: user.hasAvatar,
       }}

@@ -6,16 +6,16 @@ import { redirect } from "next/navigation";
 import { isoToDate } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { validateTermination } from "@/lib/rules";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
-const PATH = "/rh/avisos";
+const PATH = "/admin/avisos";
 
 function fail(message: string): never {
   redirect(`${PATH}?erro=${encodeURIComponent(message)}`);
 }
 
 export async function createNoticeAction(formData: FormData): Promise<void> {
-  const rh = await requireRH();
+  const admin = await requireAdmin();
 
   const type = String(formData.get("type") ?? "GENERAL");
   const title = String(formData.get("title") ?? "").trim();
@@ -32,8 +32,8 @@ export async function createNoticeAction(formData: FormData): Promise<void> {
   if (type === "GENERAL") {
     await prisma.notice.create({
       data: {
-        companyId: rh.companyId,
-        authorId: rh.id,
+        companyId: admin.companyId,
+        authorId: admin.id,
         type: "GENERAL",
         title,
         message,
@@ -41,20 +41,20 @@ export async function createNoticeAction(formData: FormData): Promise<void> {
       },
     });
   } else {
-    if (!targetUserId) fail("Selecione o funcionário que receberá o aviso.");
+    if (!targetUserId) fail("Selecione o servidor que receberá o aviso.");
 
     const error = validateTermination(lastWorkingDayISO);
     if (error) fail(error);
 
     const target = await prisma.user.findUnique({ where: { id: targetUserId } });
-    if (!target || target.companyId !== rh.companyId || target.role !== "EMPLOYEE") {
-      fail("Funcionário não encontrado nesta empresa.");
+    if (!target || target.companyId !== admin.companyId || target.role !== "EMPLOYEE") {
+      fail("Servidor não encontrado nesta instituição.");
     }
 
     await prisma.notice.create({
       data: {
-        companyId: rh.companyId,
-        authorId: rh.id,
+        companyId: admin.companyId,
+        authorId: admin.id,
         type: "TERMINATION",
         title,
         message,
@@ -64,11 +64,11 @@ export async function createNoticeAction(formData: FormData): Promise<void> {
     });
   }
 
-  revalidatePath("/rh");
-  revalidatePath("/rh/avisos");
-  revalidatePath("/rh/funcionarios");
+  revalidatePath("/admin");
+  revalidatePath("/admin/avisos");
+  revalidatePath("/admin/funcionarios");
   revalidatePath("/app");
   revalidatePath("/app/avisos");
 
-  redirect(`${PATH}?ok=${encodeURIComponent("Aviso publicado para o funcionário.")}`);
+  redirect(`${PATH}?ok=${encodeURIComponent("Aviso publicado para o servidor.")}`);
 }

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { KindBadge, StatusBadge } from "@/components/Badges";
-import { reviewAbsenceAction } from "@/app/rh/solicitacoes/actions";
+import { reviewAbsenceAction } from "@/app/admin/solicitacoes/actions";
 import { SHIFT_LABELS } from "@/lib/constants";
 import {
   dateToISO,
@@ -11,7 +11,7 @@ import {
   formatRangeBR,
 } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
-import { requireRH } from "@/lib/session";
+import { requireAdmin } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Solicitações" };
 
@@ -27,7 +27,7 @@ export default async function RhAbsencesPage({
 }: {
   searchParams: Promise<{ status?: string; ok?: string; erro?: string }>;
 }) {
-  const rh = await requireRH();
+  const rh = await requireAdmin();
   const { status: statusParam, ok, erro } = await searchParams;
 
   const status = FILTERS.some((filter) => filter.value === statusParam)
@@ -76,7 +76,7 @@ export default async function RhAbsencesPage({
           Solicitações
         </h1>
         <p className="mt-2 helper">
-          Aprove, reprove e consulte o histórico de faltas da empresa.
+          Aprove, reprove e consulte o histórico de faltas da instituição.
         </p>
       </div>
 
@@ -87,7 +87,7 @@ export default async function RhAbsencesPage({
         {FILTERS.map((filter) => (
           <Link
             key={filter.value}
-            href={`/rh/solicitacoes?status=${filter.value}`}
+            href={`/admin/solicitacoes?status=${filter.value}`}
             className={`filter-pill ${status === filter.value ? "filter-pill-active" : ""}`}
           >
             {filter.label}
@@ -102,7 +102,7 @@ export default async function RhAbsencesPage({
         <div className="card text-center">
           <p className="font-medium text-slate-700">{emptyMessage}</p>
           <p className="mt-1 text-sm text-slate-500">
-            Quando os funcionários enviarem pedidos, eles aparecem aqui.
+            Quando os servidores enviarem pedidos, eles aparecem aqui.
           </p>
         </div>
       ) : (
@@ -197,7 +197,7 @@ export default async function RhAbsencesPage({
                           required
                           minLength={3}
                           className="input resize-none bg-white"
-                          placeholder="Explique ao funcionário"
+                          placeholder="Explique ao servidor"
                         />
                         <button className="btn-danger btn-sm">Confirmar reprovação</button>
                       </form>
