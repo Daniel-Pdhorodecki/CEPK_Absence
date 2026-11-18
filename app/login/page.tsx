@@ -66,16 +66,6 @@ export default async function LoginPage({
           Entrar
         </button>
       </form>
-
-      <div className="mt-6 rounded-xl border border-dashed border-[var(--border-strong)] bg-[var(--surface-2)] p-4 text-sm text-[var(--muted)]">
-        <p className="font-semibold text-slate-700">Contas de demonstração</p>
-        <p className="mt-1">
-          RH: <code className="font-mono text-xs">rh@demo.com</code> / 123456
-        </p>
-        <p>
-          Funcionário: <code className="font-mono text-xs">funcionario@demo.com</code> / 123456
-        </p>
-      </div>
     </AuthShell>
   );
 }
