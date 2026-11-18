@@ -1,0 +1,120 @@
+// Schema do protótipo: SQLite para rodar localmente sem instalar banco.
+// No deploy do Render, scripts/use-postgres.mjs troca o provider para "postgresql".
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id           String   @id @default(cuid())
+  name         String
+  employeeCode String   @unique
+  rhCode       String   @unique
+  ownerId      String?
+  hasLogo      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  users    User[]
+  absences AbsenceRequest[]
+  notices  Notice[]
+  logo     CompanyLogo?
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String // RH | EMPLOYEE
+  isOwner      Boolean  @default(false)
+  companyId    String
+  hasAvatar    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  company       Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  absences      AbsenceRequest[] @relation("Requester")
+  reviews       AbsenceRequest[] @relation("Reviewer")
+  notices       Notice[]         @relation("Author")
+  receivedNotices Notice[]       @relation("Target")
+  noticeReads   NoticeRead[]
+  avatar        UserAvatar?
+}
+
+model CompanyLogo {
+  companyId String   @id
+  data      Bytes
+  type      String
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+model UserAvatar {
+  userId    String   @id
+  data      Bytes
+  type      String
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AbsenceRequest {
+  id            String    @id @default(cuid())
+  userId        String
+  companyId     String
+  startDate     DateTime
+  endDate       DateTime
+  shift         String // MORNING | AFTERNOON | NIGHT | FULL_DAY
+  kind          String // COMMON | MEDICAL
+  reason        String
+  proofName     String?
+  proofType     String?
+  proofData     Bytes?
+  status        String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  autoApproved  Boolean   @default(false)
+  reviewedById  String?
+  reviewedAt    DateTime?
+  reviewNote    String?
+  createdAt     DateTime  @default(now())
+
+  user       User     @relation("Requester", fields: [userId], references: [id], onDelete: Cascade)
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  reviewedBy User?    @relation("Reviewer", fields: [reviewedById], references: [id])
+
+  @@index([companyId, status])
+  @@index([userId, startDate])
+}
+
+model Notice {
+  id            String    @id @default(cuid())
+  companyId     String
+  authorId      String
+  targetUserId  String? // null = todos os funcionários
+  type          String // GENERAL | TERMINATION
+  title         String
+  message       String
+  lastWorkingDay DateTime?
+  createdAt     DateTime  @default(now())
+
+  company Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  author  User        @relation("Author", fields: [authorId], references: [id], onDelete: Cascade)
+  target  User?       @relation("Target", fields: [targetUserId], references: [id], onDelete: Cascade)
+  reads   NoticeRead[]
+
+  @@index([companyId, createdAt])
+}
+
+model NoticeRead {
+  noticeId String
+  userId   String
+  readAt   DateTime @default(now())
+
+  notice Notice @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([noticeId, userId])
+}

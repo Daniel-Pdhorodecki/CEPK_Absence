@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: cepk-absence
+    runtime: node
+    plan: free
+    region: ohio
+    branch: main
+    autoDeploy: true
+    buildCommand: node scripts/use-postgres.mjs && npm ci && npx prisma generate && npx prisma db push --skip-generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /login
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: NODE_VERSION
+        value: 22.18.0
