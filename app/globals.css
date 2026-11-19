@@ -948,6 +948,7 @@
   --install-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.9);
 }
 
+@layer components {
 .install-btn {
   display: inline-flex;
   min-height: 2.75rem;
@@ -995,6 +996,7 @@
   .install-btn-full {
     font-size: 0.875rem;
   }
+}
 }
 
 /* ---------- PWA: mobile first ---------- */

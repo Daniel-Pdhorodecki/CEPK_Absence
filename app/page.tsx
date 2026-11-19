@@ -81,8 +81,12 @@ export default async function HomePage() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 md:ml-0">
-            <InstallAppButton className="sm:hidden" />
-            <InstallAppButton variant="full" className="hidden sm:inline-flex" />
+            <span className="sm:hidden">
+              <InstallAppButton />
+            </span>
+            <span className="hidden sm:inline-flex">
+              <InstallAppButton variant="full" />
+            </span>
             <ThemeToggle />
             <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
               Entrar
