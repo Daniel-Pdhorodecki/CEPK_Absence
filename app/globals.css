@@ -922,3 +922,150 @@
 .wa-calendar .rdp-range_start.rdp-range_end {
   background: transparent;
 }
+
+/* ---------- PWA: botão de instalação ---------- */
+:root {
+  /* Light: verde claro com seta dourada. */
+  --install-bg-1: #a3e635;
+  --install-bg-2: #84cc16;
+  --install-border: rgb(77 124 15 / 0.45);
+  --install-fg: #14532d;
+  --install-arrow-1: #fff3c4;
+  --install-arrow-2: #c08a12;
+  --install-arrow-stroke: rgb(20 83 45 / 0.4);
+  --install-shadow: 0 12px 26px -16px rgb(20 83 45 / 0.8);
+}
+
+.dark {
+  /* Dark: verde escuro com seta dourada. */
+  --install-bg-1: #12371f;
+  --install-bg-2: #08160d;
+  --install-border: rgb(163 230 53 / 0.28);
+  --install-fg: #f6d27a;
+  --install-arrow-1: #fbe3a4;
+  --install-arrow-2: #d9a441;
+  --install-arrow-stroke: rgb(4 12 7 / 0.55);
+  --install-shadow: 0 14px 30px -18px rgb(0 0 0 / 0.9);
+}
+
+.install-btn {
+  display: inline-flex;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--install-border);
+  background: linear-gradient(145deg, var(--install-bg-1), var(--install-bg-2));
+  color: var(--install-fg);
+  padding: 0 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  box-shadow:
+    var(--install-shadow),
+    inset 0 1px 0 rgb(255 255 255 / 0.28);
+  transition:
+    filter 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+  outline: none;
+}
+
+.install-btn:hover {
+  filter: brightness(1.07);
+}
+
+.install-btn:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.install-btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.install-btn-full {
+  padding: 0 1.05rem;
+}
+
+@media (min-width: 640px) {
+  .install-btn-full {
+    font-size: 0.875rem;
+  }
+}
+
+/* ---------- PWA: mobile first ---------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    overscroll-behavior-y: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Evita o zoom automático dos campos no iOS. */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Áreas seguras de aparelhos com notch. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+.mobile-tabbar {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-tab {
+  display: flex;
+  min-width: 4.1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  border-radius: 1rem;
+  padding: 0.42rem 0.4rem 0.35rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--muted);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.mobile-tab:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.mobile-tab-active,
+.mobile-tab-active:hover {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+
+.mobile-tab-active .mobile-tab-icon {
+  color: currentColor;
+}

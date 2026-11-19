@@ -31,7 +31,7 @@ export function Shell({
     <div className="page-bg min-h-screen lg:flex">
       <Sidebar items={items} user={user} />
       <main className="min-w-0 flex-1">
-        <div className="mx-auto w-full max-w-5xl px-4 py-7 sm:px-6 lg:px-10 lg:py-12">
+        <div className="mx-auto w-full max-w-5xl px-4 py-7 pb-28 sm:px-6 lg:px-10 lg:py-12 lg:pb-12">
           {children}
         </div>
       </main>

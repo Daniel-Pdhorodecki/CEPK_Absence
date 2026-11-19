@@ -54,6 +54,11 @@ Não há cadastro de empresas nem códigos: a instituição é única.
   cinzas, com fonte **Geist** self-hosted.
 - **Tema escuro por padrão**, com botão sol/lua para alternar para o claro
   (superfícies claras no light, pretas/cinzas no dark).
+- **PWA instalável**: funciona como aplicativo na tela inicial do celular, com
+  ícones próprios, tela offline e botão de instalação dourado (verde claro no
+  tema claro, verde escuro no escuro).
+- **Mobile first**: barra inferior fixa com os atalhos principais, áreas seguras
+  para aparelhos com notch e campos sem zoom automático no iOS.
 - A escolha do tema fica salva no navegador (`localStorage`) e é aplicada antes
   da página pintar, sem flash.
 - Botões em pílula, cards arredondados e navegação lateral com item ativo
@@ -140,10 +145,15 @@ app/
     avisos/                # publicar comunicados/desligamento
     perfil/                # dados e foto
   rh/                      # redirect legado para /admin
+  offline/                 # tela exibida sem conexão (PWA)
+  manifest.ts              # manifesto da PWA
   api/comprovante/[id]/    # download autenticado do comprovante
   api/avatar/[id]/         # foto de perfil
   api/logout/              # encerrar sessão
 components/                # layout, calendário, badges, avatar e perfil
+public/
+  sw.js                    # service worker (cache e tela offline)
+  icons/                   # ícones 192, 512 e maskable
 lib/
   constants.ts             # instituição, turnos, labels e domínio de e-mail
   email.ts                 # validação do e-mail institucional
@@ -157,6 +167,7 @@ prisma/
   seed.ts                  # dados de demonstração locais
 scripts/
   create-admin.mjs         # cria/atualiza o administrador inicial
+  generate-icons.mjs       # gera os ícones PNG da PWA
   use-postgres.mjs         # converte o schema para PostgreSQL no deploy
 render.yaml                # blueprint do Render (banco no Neon)
 ```
@@ -175,6 +186,29 @@ npm run db:create-admin
 
 O script é idempotente: se o e-mail já existir, atualiza a senha e garante o
 perfil `ADMIN` aprovado. A senha nunca é gravada no repositório.
+
+## Aplicativo instalável (PWA)
+
+O CEPK Absence pode ser instalado na tela inicial do celular ou no computador:
+
+- **Android / Chrome / Edge**: o botão dourado de instalação abre o prompt nativo.
+  Se ele não aparecer, use o menu do navegador → **Instalar aplicativo**.
+- **iPhone / iPad**: abra no **Safari**, toque em **Compartilhar** e depois em
+  **Adicionar à Tela de Início**. O botão mostra essas instruções automaticamente.
+- O botão desaparece quando o app já está instalado.
+
+O service worker (`public/sw.js`) guarda apenas arquivos estáticos e a tela
+`/offline`. Páginas autenticadas (`/app`, `/admin`) e APIs **não entram no cache**,
+para não expor dados entre sessões no mesmo aparelho.
+
+Os ícones ficam em `public/icons/` e são versionados. Para regerá-los após mudar
+o brasão:
+
+```bash
+npm run icons:generate
+```
+
+> PWA exige HTTPS (o Render já fornece) ou `localhost`.
 
 ## Deploy no Render + Neon
 

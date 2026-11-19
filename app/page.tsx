@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 import { getCurrentUser } from "@/lib/session";
+import { InstallAppButton } from "@/components/InstallAppButton";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -55,8 +56,13 @@ export default async function HomePage() {
   return (
     <div className="page-bg min-h-screen">
       <header className="sticky top-0 z-30 border-b border-[var(--border)] bg-[var(--page)] backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center gap-4 px-5 py-4">
-          <Logo />
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-3 px-4 py-3 sm:gap-4 sm:px-5 sm:py-4">
+          <span className="hidden sm:inline-flex">
+            <Logo />
+          </span>
+          <span className="sm:hidden">
+            <Logo compact />
+          </span>
 
           <nav className="mx-auto hidden items-center gap-1 text-sm md:flex">
             {[
@@ -75,6 +81,8 @@ export default async function HomePage() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 md:ml-0">
+            <InstallAppButton className="sm:hidden" />
+            <InstallAppButton variant="full" className="hidden sm:inline-flex" />
             <ThemeToggle />
             <Link href="/login" className="btn-ghost btn-sm hidden sm:inline-flex">
               Entrar
@@ -96,7 +104,7 @@ export default async function HomePage() {
                 "radial-gradient(circle at 20% 0%, rgba(132,204,22,0.18), transparent 45%), radial-gradient(circle at 85% 20%, rgba(20,83,45,0.16), transparent 40%)",
             }}
           />
-          <div className="mx-auto grid w-full max-w-6xl items-center gap-14 px-5 pb-16 pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:pb-24 lg:pt-24">
+          <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-14 pt-10 sm:px-5 sm:pb-16 sm:pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-24 lg:pt-24">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] px-3.5 py-1.5 text-xs font-medium text-[var(--muted)]">
                 <span className="size-1.5 rounded-full bg-[var(--accent-lime)]" />
@@ -123,10 +131,15 @@ export default async function HomePage() {
                 <Link href="/login" className="btn-secondary px-7 py-3.5 text-base">
                   Já tenho conta
                 </Link>
+                <InstallAppButton
+                  variant="full"
+                  className="min-h-[3.05rem] px-6 text-base"
+                />
               </div>
 
               <p className="mt-5 text-sm text-[var(--muted-2)]">
-                Use seu e-mail institucional @escola.pr.gov.br. Todo cadastro passa pela aprovação da administração.
+                Instale na tela inicial do celular e use como um aplicativo. Todo
+                cadastro passa pela aprovação da administração.
               </p>
             </div>
 

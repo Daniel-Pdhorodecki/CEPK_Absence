@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar } from "@/components/Avatar";
+import { InstallAppButton } from "@/components/InstallAppButton";
 import type { ShellUser } from "@/components/Shell";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -96,7 +97,10 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
       <aside className="sidebar fixed inset-y-0 left-0 hidden w-64 flex-col px-4 py-6 lg:flex">
         <div className="flex items-center justify-between gap-2 px-2">
           <Logo light compact />
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <InstallAppButton />
+            <ThemeToggle />
+          </div>
         </div>
 
         <div className="sidebar-company mt-6 flex items-center gap-3">
@@ -163,6 +167,7 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
         <div className="flex items-center justify-between gap-2 px-4 py-3">
           <Logo compact />
           <div className="flex items-center gap-2">
+            <InstallAppButton />
             <Link
               href={user.profileHref}
               aria-label="Editar perfil e foto"
@@ -183,27 +188,36 @@ export function Sidebar({ items, user }: { items: NavItem[]; user: ShellUser }) 
             </form>
           </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto px-3 pb-2">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                isActive(item.href)
-                  ? "bg-[var(--btn-bg)] text-[var(--btn-fg)]"
-                  : "text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--text)]"
-              }`}
-            >
-              {item.label}
-              {item.badge ? (
-                <span className="rounded-full bg-[var(--accent-lime)] px-1.5 text-[10px] font-bold text-black">
-                  {item.badge}
-                </span>
-              ) : null}
-            </Link>
-          ))}
-        </nav>
       </div>
+
+      <nav
+        aria-label="Navegação principal"
+        className="mobile-tabbar fixed inset-x-0 bottom-0 z-30 lg:hidden"
+      >
+        <div className="flex items-stretch gap-1 overflow-x-auto px-2 py-1.5">
+          {items.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`mobile-tab relative ${active ? "mobile-tab-active" : ""}`}
+              >
+                <span className="mobile-tab-icon">
+                  <Icon name={item.icon} />
+                </span>
+                <span className="max-w-[4.5rem] truncate">{item.label}</span>
+                {item.badge ? (
+                  <span className="absolute right-1.5 top-1 rounded-full bg-[var(--accent-lime)] px-1.5 text-[9px] font-bold leading-4 text-black">
+                    {item.badge}
+                  </span>
+                ) : null}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </>
   );
 }

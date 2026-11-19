@@ -10,6 +10,7 @@
     "db:seed": "prisma db seed",
     "db:create-admin": "node scripts/create-admin.mjs",
     "db:reset": "prisma db push --force-reset && prisma db seed",
+    "icons:generate": "node scripts/generate-icons.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {
